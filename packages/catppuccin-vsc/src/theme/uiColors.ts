@@ -1,9 +1,11 @@
-import type { ThemeContext } from "@/types";
+import type { ThemeContext, WorkbenchColors } from "@/types";
 import { mix, opacity, shade, transparent } from "./utilities";
 import extensions from "./extensions";
 import uiCustomizations from "./ui";
 
-export const getUiColors = (context: ThemeContext): Record<string, string> => {
+export const getUiColors = (
+  context: ThemeContext,
+): Partial<Record<keyof WorkbenchColors, string>> => {
   const { palette, paletteAnsi, options, isLatte } = context;
 
   const accent = palette[options.accent];
@@ -12,6 +14,8 @@ export const getUiColors = (context: ThemeContext): Record<string, string> => {
     ? opacity(palette.overlay1, 0.15)
     : transparent;
 
+  // find the definitions here:
+  // https://code.visualstudio.com/api/references/theme-color
   return {
     // Base colors
     focusBorder: accent,
@@ -32,20 +36,6 @@ export const getUiColors = (context: ThemeContext): Record<string, string> => {
     "textLink.foreground": palette.blue,
     "textPreformat.foreground": palette.text,
     "textSeparator.foreground": accent,
-
-    // CRITICAL FIX FOR #434: IME/Pre-Edit Text Colors
-    "editor.imeBackground": opacity(palette.mantle, 0.85),
-    "editor.imeForeground": palette.text,
-    "editor.imeBorder": accent,
-    "editor.compositionBackground": opacity(palette.surface1, 0.9),
-    "editor.compositionForeground": palette.text,
-    "editor.compositionBorder": opacity(accent, 0.4),
-    "editor.compositionSelectionBackground": opacity(palette.surface2, 0.4),
-    "editor.compositionSelectionForeground": palette.text,
-    "editor.compositionCueBackground": opacity(palette.surface1, 0.7),
-    "editor.compositionCueForeground": palette.subtext1,
-    "editor.compositionCueBorder": palette.surface2,
-    "editor.placeholder.foreground": palette.overlay1,
 
     // Activity Bar
     "activityBar.background": palette.crust,
@@ -311,16 +301,16 @@ export const getUiColors = (context: ThemeContext): Record<string, string> => {
     "inputValidation.warningForeground": palette.crust,
 
     // Lists and trees
-    "list.activeSelectionBackground": palette.surface0,
+    "list.activeSelectionBackground": palette.surface0, // currently selected in file tree
     "list.activeSelectionForeground": palette.text,
     "list.dropBackground": dropBackground,
-    "list.focusBackground": palette.surface0,
+    "list.focusBackground": palette.surface0, // when using keyboard to move around files
     "list.focusForeground": palette.text,
     "list.focusOutline": transparent,
     "list.highlightForeground": accent,
-    "list.hoverBackground": opacity(palette.surface0, 0.5),
+    "list.hoverBackground": opacity(palette.surface0, 0.5), // when hovering over the file tree
     "list.hoverForeground": palette.text,
-    "list.inactiveSelectionBackground": palette.surface0,
+    "list.inactiveSelectionBackground": palette.surface0, // currently selected focused in editor
     "list.inactiveSelectionForeground": palette.text,
     "list.warningForeground": palette.peach,
     "listFilterWidget.background": palette.surface1,
@@ -434,14 +424,18 @@ export const getUiColors = (context: ThemeContext): Record<string, string> => {
     "statusBar.background": palette.crust,
     "statusBar.foreground": palette.text,
     "statusBar.border": border,
+    // having no folder open shouldn't change the bar
     "statusBar.noFolderBackground": palette.crust,
     "statusBar.noFolderForeground": palette.text,
     "statusBar.noFolderBorder": border,
+    // debugging is peach
     "statusBar.debuggingBackground": palette.peach,
     "statusBar.debuggingForeground": palette.crust,
     "statusBar.debuggingBorder": border,
+    // remote is blue
     "statusBarItem.remoteBackground": palette.blue,
     "statusBarItem.remoteForeground": palette.crust,
+    // different states
     "statusBarItem.activeBackground": opacity(palette.surface2, 0.4),
     "statusBarItem.hoverBackground": opacity(palette.surface2, 0.2),
     "statusBarItem.prominentForeground": accent,
@@ -483,22 +477,22 @@ export const getUiColors = (context: ThemeContext): Record<string, string> => {
 
     // Terminal
     "terminal.foreground": palette.text,
-    "terminal.ansiBlack": paletteAnsi.normal.black,
-    "terminal.ansiRed": paletteAnsi.normal.red,
-    "terminal.ansiGreen": paletteAnsi.normal.green,
-    "terminal.ansiYellow": paletteAnsi.normal.yellow,
-    "terminal.ansiBlue": paletteAnsi.normal.blue,
-    "terminal.ansiMagenta": paletteAnsi.normal.magenta,
-    "terminal.ansiCyan": paletteAnsi.normal.cyan,
-    "terminal.ansiWhite": paletteAnsi.normal.white,
-    "terminal.ansiBrightBlack": paletteAnsi.bright.black,
-    "terminal.ansiBrightRed": paletteAnsi.bright.red,
-    "terminal.ansiBrightGreen": paletteAnsi.bright.green,
-    "terminal.ansiBrightYellow": paletteAnsi.bright.yellow,
-    "terminal.ansiBrightBlue": paletteAnsi.bright.blue,
-    "terminal.ansiBrightMagenta": paletteAnsi.bright.magenta,
-    "terminal.ansiBrightCyan": paletteAnsi.bright.cyan,
-    "terminal.ansiBrightWhite": paletteAnsi.bright.white,
+    "terminal.ansiBlack": paletteAnsi.normal.black, // color0
+    "terminal.ansiRed": paletteAnsi.normal.red, // color1
+    "terminal.ansiGreen": paletteAnsi.normal.green, // color2
+    "terminal.ansiYellow": paletteAnsi.normal.yellow, // color3
+    "terminal.ansiBlue": paletteAnsi.normal.blue, // color4
+    "terminal.ansiMagenta": paletteAnsi.normal.magenta, // color5
+    "terminal.ansiCyan": paletteAnsi.normal.cyan, // color6
+    "terminal.ansiWhite": paletteAnsi.normal.white, // color7
+    "terminal.ansiBrightBlack": paletteAnsi.bright.black, // color8
+    "terminal.ansiBrightRed": paletteAnsi.bright.red, // color9
+    "terminal.ansiBrightGreen": paletteAnsi.bright.green, // color10
+    "terminal.ansiBrightYellow": paletteAnsi.bright.yellow, // color11
+    "terminal.ansiBrightBlue": paletteAnsi.bright.blue, // color12
+    "terminal.ansiBrightMagenta": paletteAnsi.bright.magenta, // color13
+    "terminal.ansiBrightCyan": paletteAnsi.bright.cyan, // color14
+    "terminal.ansiBrightWhite": paletteAnsi.bright.white, // color15
     "terminal.selectionBackground": palette.surface2,
     "terminal.inactiveSelectionBackground": opacity(palette.surface2, 0.5),
     "terminalCursor.background": palette.base,
